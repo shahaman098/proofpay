@@ -4,7 +4,7 @@ Project name: ProofPay
 Deployed URL: https://createos-stripe-agents.vercel.app
 Public repo: https://github.com/shahaman098/proofpay
 Stripe Projects share link: <PASTE from `stripe projects share`>
-Demo video: <PASTE YouTube/Loom — local cut ready at docs/demo-assets/proofpay-submission-demo.mp4 (still add on-camera intro)>
+Demo video: https://createos-stripe-agents.vercel.app/demo/proofpay-submission-demo.mp4 (add on-camera intro if judges require face)
 Hackathon code: CreateOS-2026
 
 One-liner: Hold a Stripe bounty; capture only when CreateOS sandbox tests pass.

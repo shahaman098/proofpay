@@ -3,16 +3,142 @@
 @tailwind utilities;
 
 :root {
-  --bg: #0a0f1a;
-  --panel: #111827;
-  --accent: #635bff;
-  --pass: #22c55e;
-  --block: #f59e0b;
-  --fail: #ef4444;
+  --cream: #ffffeb;
+  --ink: #1a1a1a;
+  --ink-soft: #3a3a3a;
+  --fog: #6b6b6b;
+  --lilac: #f0d7ff;
+  --forest: #034f46;
+  --ember: #ffa946;
+  --pass: #034f46;
+  --block: #ffa946;
+  --fail: #b42318;
+  --sticker-shadow: 3px 3px 0 0 rgb(0, 0, 0);
+}
+
+html {
+  background: var(--cream);
 }
 
 body {
-  background: var(--bg);
-  color: #e5e7eb;
-  font-family: ui-sans-serif, system-ui, sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-figtree), system-ui, sans-serif;
+}
+
+::selection {
+  background: var(--lilac);
+  color: var(--ink);
+}
+
+.font-display {
+  font-family: var(--font-garamond), Georgia, serif;
+  font-weight: 400;
+}
+
+.ink-border {
+  border: 2px solid var(--ink);
+}
+
+.sticker {
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+  box-shadow: var(--sticker-shadow);
+}
+
+.chamber {
+  border: 2px solid var(--ink);
+  border-radius: 40px;
+}
+
+.chamber-dark {
+  background: var(--forest);
+  color: var(--cream);
+  border: 2px solid var(--ink);
+  border-radius: 48px;
+}
+
+.btn-primary {
+  background: var(--lilac);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+  box-shadow: var(--sticker-shadow);
+  min-height: 52px;
+  font-weight: 600;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0 0 rgb(0, 0, 0);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translate(3px, 3px);
+  box-shadow: none;
+}
+
+.btn-primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.nav-pill {
+  background: var(--cream);
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+}
+
+.step-pill {
+  border: 2px solid transparent;
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--fog);
+}
+
+.step-pill.active {
+  border-color: var(--ink);
+  background: var(--lilac);
+  color: var(--ink);
+}
+
+.step-pill.done {
+  border-color: var(--ink);
+  background: var(--cream);
+  color: var(--forest);
+}
+
+.log-panel {
+  background: #0f1f1c;
+  color: #e8f5f1;
+  border: 2px solid var(--ink);
+  border-radius: 28px;
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.rise {
+  animation: rise-in 0.55s ease both;
+}
+
+.rise-delay-1 {
+  animation-delay: 0.08s;
+}
+.rise-delay-2 {
+  animation-delay: 0.16s;
+}
+.rise-delay-3 {
+  animation-delay: 0.24s;
 }

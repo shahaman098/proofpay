@@ -1,0 +1,10 @@
+Discord submission fields (https://discord.gg/nodeops)
+
+Project name: ProofPay
+Live URL: https://createos-stripe-agents.vercel.app
+Repo: https://github.com/shahaman098/proofpay
+Demo video: https://createos-stripe-agents.vercel.app/demo/proofpay-submission-demo.mp4
+Hackathon code: CreateOS-2026
+Stripe Projects share: <PASTE after watcher SHARE_DONE>
+One-liner: Hold a Stripe bounty; capture only when CreateOS sandbox tests pass.
+Differentiator: The sandbox is the payment condition (egress-locked microVM).

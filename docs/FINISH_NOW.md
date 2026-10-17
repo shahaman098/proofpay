@@ -24,6 +24,16 @@ curl -sS https://createos-stripe-agents.vercel.app/api/health   # must be create
 
 ### 1. Stripe Projects (mandatory)
 
+### Fast path (recommended)
+
+1. Approve Stripe CLI device code (watcher uses profile `proofpay-live`).
+2. Complete https://dashboard.stripe.com/register/projects (LIVE account — password required).
+3. Watcher auto-runs `projects init` + `projects share`.
+4. Paste share link into leaderboard + Discord (`docs/LEADERBOARD_FORM.txt`, `docs/DISCORD_FORM.txt`).
+5. Post social draft already on clipboard (`docs/SOCIAL_POST.txt`).
+
+
+
 **Open this claim URL first:**
 https://dashboard.stripe.com/onboard_sandbox/YWNjdF8xVVJkY0dERXlRWTJCMU50LDE3OTI4ODQ0MTAv100RZrj09BO
 

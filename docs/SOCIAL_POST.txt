@@ -4,6 +4,6 @@ The sandbox is the payment condition.
 
 Live: https://createos-stripe-agents.vercel.app
 Repo: https://github.com/shahaman098/proofpay
-Video: <PASTE_YOUTUBE_OR_LOOM>
+Video: https://createos-stripe-agents.vercel.app/demo/proofpay-submission-demo.mp4
 
 #CreateOS #StripeProjects CreateOS-2026

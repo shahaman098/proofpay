@@ -6,6 +6,11 @@ Do these in order. Do not polish code first.
 
 Stripe Projects needs a **live-mode** account. A claimable sandbox is ready:
 
+
+**Faster path (no Google passkey):** Stripe register+claim form is open:
+https://dashboard.stripe.com/register?claim=YWNjdF8xVVJkY0dERXlRWTJCMU50LDE3OTI4ODQ0MTAv100RZrj09BO  
+Email/name filled → set password → Country: United Kingdom → Create account.
+
 **Claim URL (open now):**  
 https://dashboard.stripe.com/onboard_sandbox/YWNjdF8xVVJkY0dERXlRWTJCMU50LDE3OTI4ODQ0MTAv100RZrj09BO  
 
@@ -95,3 +100,6 @@ Submit the same four links + code in the event Discord form.
 - **Differentiator:** Egress-locked microVM is the payment condition.  
 - **Stack:** CreateOS Sandbox + Stripe manual-capture PaymentIntent + Next.js/Vercel  
 - **Hackathon code:** CreateOS-2026  
+
+
+Public demo video URL: https://createos-stripe-agents.vercel.app/demo/proofpay-submission-demo.mp4

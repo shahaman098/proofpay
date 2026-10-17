@@ -20,7 +20,8 @@
 - [x] Deployed URL (full bounty works on prod)
 - [x] CreateOS Sandbox + Stripe manual capture demo path
 - [ ] Stripe Projects claim → `stripe projects share`
-- [ ] Demo video 2–3 min (on camera)
+- [x] Demo video ~2 min with Kris Sah VO (on-camera still optional)
+  - https://createos-stripe-agents.vercel.app/demo/proofpay-submission-demo.mp4
 - [ ] X/LinkedIn post tagging CreateOS
 - [ ] Leaderboard submit + Discord form with **`CreateOS-2026`**
 
@@ -53,3 +54,6 @@ Repo: https://github.com/shahaman098/proofpay
 createos login   # if needed
 npm run sync-createos-token && vercel --prod --yes
 ```
+
+
+Public demo video URL: https://createos-stripe-agents.vercel.app/demo/proofpay-submission-demo.mp4
