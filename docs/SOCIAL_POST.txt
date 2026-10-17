@@ -1,0 +1,9 @@
+Built ProofPay for the @createosai × @stripe hackathon: an agent writes webhook verification code, runs it in a locked-down CreateOS microVM, and we only capture the Stripe bounty when sandbox tests pass.
+
+The sandbox is the payment condition.
+
+Live: https://createos-stripe-agents.vercel.app
+Repo: https://github.com/shahaman098/proofpay
+Video: <PASTE_YOUTUBE_OR_LOOM>
+
+#CreateOS #StripeProjects CreateOS-2026

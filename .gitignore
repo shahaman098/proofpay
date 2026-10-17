@@ -46,3 +46,4 @@ scripts/.run-bounty.mjs
 *.tsbuildinfo
 next-env.d.ts
 docs/CLAIM_SANDBOX.local.md
+docs/demo-assets/*.webm

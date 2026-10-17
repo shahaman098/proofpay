@@ -28,6 +28,12 @@ Copy the share link. Say **projects claimed** in chat so the agent can finish wi
 
 ## 1) Demo video (15 min)
 
+**Screen B-roll already recorded locally:**  
+`docs/demo-assets/proofpay-submission-demo.mp4 (~2:04 cut) — still add on-camera face time` (open it, verify BLOCKED→PASS→capture).  
+You still must film **yourself on camera** for the first ~20–30s, then cut to this or re-record the live site with camera PiP.
+
+
+
 1. Refresh token:
 
 ```bash
@@ -65,6 +71,9 @@ Post on X and/or LinkedIn (tag CreateOS).
 3. Hackathon code (exact): `CreateOS-2026`
 
 ## 4) Discord form (5 min)
+
+Event Discord: https://discord.gg/nodeops
+
 
 Submit the same four links + code in the event Discord form.
 
