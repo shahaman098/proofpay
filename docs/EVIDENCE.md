@@ -21,8 +21,16 @@
 - Stripe test sandbox account `acct_1URX7lAPGo7pmIXl` (manual-capture PaymentIntent)
 - Staged agent codegen (OpenRouter key not set; fail-then-fix still demonstrated)
 
-## Not yet verified this session
+## Production verification (same session)
 
-- Stripe Projects `init` still returns `ACCOUNT_NOT_ELIGIBLE` until Projects is enabled on the account / claim URL completed
-- Production Vercel live bounty (env push in progress)
-- Demo video / social / leaderboard submit (operator actions)
+| Field | Value |
+|-------|--------|
+| Endpoint | `POST https://createos-stripe-agents.vercel.app/api/run` |
+| PaymentIntent | `pi_3URdt1APGo7pmIXl0dcTomyz` → `succeeded` |
+| Sandbox | `sb-01m55ar25ngy6kgb0q32pwwabg` |
+| Result | BLOCKED → FAIL → PASS → capture |
+
+## Still open
+
+- Stripe Projects `init` → `ACCOUNT_NOT_ELIGIBLE` until account claim / Projects enablement
+- Demo video / social / leaderboard / Discord form (operator)

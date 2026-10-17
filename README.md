@@ -9,6 +9,7 @@ CreateOS × Stripe Projects hackathon (Oct 17, 2026). A client posts a software 
 | | |
 |--|--|
 | **App** | https://createos-stripe-agents.vercel.app |
+| **Repo** | https://github.com/shahaman098/proofpay |
 | **Hackathon code** | `CreateOS-2026` |
 | **Evidence** | [docs/EVIDENCE.md](docs/EVIDENCE.md) |
 
