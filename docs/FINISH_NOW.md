@@ -24,6 +24,11 @@ curl -sS https://createos-stripe-agents.vercel.app/api/health   # must be create
 
 ### 1. Stripe Projects (mandatory)
 
+**Open this claim URL first:**
+https://dashboard.stripe.com/onboard_sandbox/YWNjdF8xVVJkY0dERXlRWTJCMU50LDE3OTI4ODQ0MTAv100RZrj09BO
+
+(`acct_1URdcGDEyQY2B1Nt` — then `stripe login` + `projects init/add/share`)
+
 CLI signed into `acct_1Tw3ZQGBTcMRYMsX` (Boto AI) but **has no live-mode access**. Projects needs live context.
 
 1. Open https://projects.stripe.com/new (or https://projects.dev/hackathon-participants) while logged into a Stripe account that can claim the hackathon sandbox.

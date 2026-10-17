@@ -45,3 +45,4 @@ scripts/.run-bounty.mjs
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+docs/CLAIM_SANDBOX.local.md
