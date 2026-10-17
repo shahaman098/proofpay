@@ -140,18 +140,32 @@ export default function Home() {
     if (step === "failed" && id === "paid") return "text-gray-600";
     if (step === "paid" && mine <= order.indexOf("paid")) return "text-emerald-400";
     if (mine < cur) return "text-emerald-400";
-    if (mine === cur) return "text-violet-300 font-semibold";
+    if (mine === cur) return "text-[var(--accent)] font-semibold";
     return "text-gray-600";
   }
+
+  const settlementLabel =
+    done === true
+      ? "CAPTURED"
+      : done === false
+        ? "CANCELLED"
+        : stripeStatus === "requires_capture"
+          ? "HELD"
+          : stripeStatus === "succeeded"
+            ? "CAPTURED"
+            : "IDLE";
 
   return (
     <main className="mx-auto max-w-7xl p-6">
       <header className="mb-6 border-b border-gray-800 pb-6">
-        <p className="text-sm text-violet-400">CreateOS × Stripe Projects · CreateOS-2026</p>
+        <p className="text-sm text-[var(--accent)]">CreateOS × Stripe Projects · CreateOS-2026</p>
         <h1 className="mt-1 text-3xl font-bold tracking-tight text-white">ProofPay</h1>
         <p className="mt-2 max-w-2xl text-gray-400">
           Hold a Stripe bounty. Run the agent&apos;s code in a CreateOS microVM with egress locked. Capture
           payment only when tests pass.
+        </p>
+        <p className="mt-3 max-w-2xl border-l-2 border-[var(--accent)] pl-3 text-sm text-gray-300">
+          The sandbox is not a side feature — it is the payment condition.
         </p>
         <ol className="mt-4 flex flex-wrap gap-3 text-xs">
           {STEPS.map((s) => (
@@ -164,10 +178,27 @@ export default function Home() {
 
       <div className="grid gap-6 lg:grid-cols-2">
         <section className="rounded-xl border border-gray-800 bg-[var(--panel)] p-5">
-          <h2 className="text-lg font-semibold text-white">Bounty & settlement</h2>
-          <p className="mt-2 text-sm text-gray-400">
-            Task: implement Stripe webhook signature verification inside an isolated sandbox.
-          </p>
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <h2 className="text-lg font-semibold text-white">Bounty & settlement</h2>
+              <p className="mt-2 text-sm text-gray-400">
+                Task: Stripe webhook signature verification — only inside an isolated CreateOS microVM.
+              </p>
+            </div>
+            <span
+              className={`shrink-0 rounded px-2 py-1 font-mono text-xs font-semibold tracking-wide ${
+                settlementLabel === "CAPTURED"
+                  ? "bg-emerald-500/15 text-emerald-400"
+                  : settlementLabel === "HELD"
+                    ? "bg-amber-500/15 text-amber-300"
+                    : settlementLabel === "CANCELLED"
+                      ? "bg-red-500/15 text-red-400"
+                      : "bg-gray-800 text-gray-500"
+              }`}
+            >
+              {settlementLabel}
+            </span>
+          </div>
           <dl className="mt-4 space-y-2 text-sm">
             <div className="flex justify-between gap-4">
               <dt className="text-gray-500">PaymentIntent</dt>
@@ -182,8 +213,10 @@ export default function Home() {
               <dd className="truncate font-mono text-xs text-gray-200">{sandboxId ?? "—"}</dd>
             </div>
             <div className="flex flex-col gap-1">
-              <dt className="text-gray-500">Execution receipt</dt>
-              <dd className="break-all font-mono text-xs text-emerald-400/90">{receipt ?? "—"}</dd>
+              <dt className="text-gray-500">Execution receipt (HMAC)</dt>
+              <dd className="break-all rounded bg-black/40 p-2 font-mono text-xs text-emerald-400/90">
+                {receipt ?? "— issued only after sandbox tests pass —"}
+              </dd>
             </div>
           </dl>
           {dashboardUrl && (
@@ -191,7 +224,7 @@ export default function Home() {
               href={dashboardUrl}
               target="_blank"
               rel="noreferrer"
-              className="mt-4 inline-block text-sm text-violet-400 hover:underline"
+              className="mt-4 inline-block text-sm text-[var(--accent)] hover:underline"
             >
               Open in Stripe Dashboard →
             </a>
@@ -208,12 +241,14 @@ export default function Home() {
             <p
               className={`mt-3 text-center text-sm font-medium ${done ? "text-emerald-400" : "text-red-400"}`}
             >
-              {done ? "Bounty captured — proof verified." : "Bounty cancelled — tests did not pass."}
+              {done
+                ? "Settled: receipt verified → Stripe capture."
+                : "Not settled: tests failed → bounty cancelled."}
             </p>
           )}
           <p className="mt-4 text-xs text-gray-500">
             Repo:{" "}
-            <a className="text-violet-400 hover:underline" href="https://github.com/shahaman098/proofpay">
+            <a className="text-[var(--accent)] hover:underline" href="https://github.com/shahaman098/proofpay">
               github.com/shahaman098/proofpay
             </a>
           </p>

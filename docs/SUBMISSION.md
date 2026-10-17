@@ -9,7 +9,8 @@
 |----------|-----|
 | Live app | https://createos-stripe-agents.vercel.app |
 | Public repo | https://github.com/shahaman098/proofpay |
-| Sample captured PI | https://dashboard.stripe.com/test/payments/pi_3URdt1APGo7pmIXl0dcTomyz |
+| Sample captured PI | https://dashboard.stripe.com/test/payments/pi_3URfYLAPGo7pmIXl2f9ZDBx4 |
+| Health | https://createos-stripe-agents.vercel.app/api/health |
 | Evidence | [EVIDENCE.md](./EVIDENCE.md) |
 | Leaderboard | https://projects.dev/leaderboard |
 

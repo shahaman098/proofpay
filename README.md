@@ -1,60 +1,74 @@
 # ProofPay
 
-**Pay the agent only when the sandbox proves the code works.**
+**Payment settles only when an egress-locked CreateOS microVM proves the agent’s code works.**
 
-CreateOS × Stripe Projects hackathon (Oct 17, 2026). A client posts a software bounty; funds are held on a Stripe **test-mode** PaymentIntent with manual capture. An agent writes `verify.mjs` for Stripe webhook signature validation. Code runs only inside a **CreateOS** microVM with **egress locked** (`egress: []`). A supply-chain probe must fail to exfiltrate. When hidden tests pass, ProofPay issues an HMAC execution receipt and **captures** the bounty.
+That is the product: Stripe holds the bounty; CreateOS is the condition of capture. No green tests in the sandbox → no money.
 
-## Live demo
+| Live | Repo | Code |
+|------|------|------|
+| [createos-stripe-agents.vercel.app](https://createos-stripe-agents.vercel.app) | [github.com/shahaman098/proofpay](https://github.com/shahaman098/proofpay) | `CreateOS-2026` |
 
-| | |
-|--|--|
-| **App** | https://createos-stripe-agents.vercel.app |
-| **Repo** | https://github.com/shahaman098/proofpay |
-| **Hackathon code** | `CreateOS-2026` |
-| **Evidence** | [docs/EVIDENCE.md](docs/EVIDENCE.md) |
+CreateOS × Stripe Projects · Oct 17, 2026 · [Evidence](docs/EVIDENCE.md) · [Submission](docs/SUBMISSION.md)
 
-## Stack
+## Why judges care (30 seconds)
 
-- [CreateOS Sandbox](https://createos.sh/docs/Sandbox) — `@nodeops-createos/sandbox` (`api.sb.createos.sh`, OAuth via `createos login` or API key)
-- Stripe test PaymentIntents (`capture_method: manual`)
-- OpenRouter when `OPENROUTER_API_KEY` is set; otherwise a staged fail→fix agent (still writes + retries in the sandbox)
-- Next.js 15 on Vercel
+1. **Hold** — Stripe test PaymentIntent, `capture_method: manual` ($100 held).
+2. **Isolate** — Agent code runs only in a CreateOS Firecracker microVM with `egress: []`.
+3. **Prove trust** — Supply-chain probe tries to exfiltrate → **BLOCKED**.
+4. **Agent loop** — Writes `verify.mjs` (webhook signature verification); hidden tests FAIL then PASS.
+5. **Settle** — HMAC execution receipt + `paymentIntents.capture`. Fail → cancel.
+
+> Differentiator judges can quote: *“The sandbox is not a side feature — it is the payment condition.”*
 
 ## Demo flow
 
-1. **Post bounty** — manual-capture PaymentIntent (`pm_card_visa`).
-2. **Sandbox** — CreateOS VM with empty egress allowlist.
-3. **Probe** — `probe.mjs` tries to POST secrets to `attacker.example` → **BLOCKED**.
-4. **Agent** — writes `verify.mjs`; hidden tests run; retries up to 4× (attempt 1 omits timestamp tolerance).
-5. **Settle** — on pass, HMAC receipt + `paymentIntents.capture`; on fail, cancel.
+```
+Post bounty → Boot sandbox → BLOCKED exfil → Agent FAIL → Agent PASS → Capture
+```
+
+Watch it live: open the app → **Post bounty & run agent**. Log should show `BLOCKED` → `FAIL` → `PASS` → Stripe `succeeded`.
+
+Sample captured PI: [`pi_3URfYLAPGo7pmIXl2f9ZDBx4`](https://dashboard.stripe.com/test/payments/pi_3URfYLAPGo7pmIXl2f9ZDBx4)
+
+## Stack
+
+- [CreateOS Sandbox](https://createos.sh/docs/Sandbox) — `@nodeops-createos/sandbox` (`api.sb.createos.sh`, OAuth via `createos login`)
+- Stripe test PaymentIntents (manual capture)
+- OpenRouter when `OPENROUTER_API_KEY` is set; otherwise staged fail→fix agent (still writes + retries in the sandbox)
+- Next.js 15 on Vercel
 
 ## Setup
 
 ```bash
 cp .env.example .env
-# createos login   # writes ~/.createos/.oauth (or set CREATEOS_SANDBOX_API_KEY)
-# Stripe test key + PROOFPAY_RECEIPT_SECRET (openssl rand -hex 32)
+createos login          # or set CREATEOS_SANDBOX_API_KEY
+# Stripe test secret + PROOFPAY_RECEIPT_SECRET (openssl rand -hex 32)
 npm install
-npm run dev          # http://localhost:3000
-npm run run-bounty   # CLI full loop
+npm run preflight       # sync CreateOS token, clear orphan sandboxes, smoke auth
+npm run dev             # http://localhost:3000
+npm run run-bounty      # full CLI loop
 ```
+
+### Before a live demo / recording
+
+```bash
+npm run preflight
+npm run sync-createos-token && vercel --prod --yes
+curl -sS https://createos-stripe-agents.vercel.app/api/health
+```
+
+`GET /api/health` must report `createos: ok` (not `unauthorized`). OAuth tokens expire — preflight refreshes them into `.env` + Vercel.
 
 ### Stripe Projects
 
-If your account is eligible:
-
 ```bash
+stripe plugin install projects
+# Claim sandbox eligibility in the Stripe dashboard / projects.dev if needed
+stripe switch context <acct> --live   # Projects requires live-mode context
 stripe projects init --yes
-stripe projects add createos/project
-stripe projects add openrouter/api
-stripe projects env --pull
+stripe projects add createos
+stripe projects share                 # leaderboard code CreateOS-2026
 ```
-
-Unclaimed CLI sandboxes may return `ACCOUNT_NOT_ELIGIBLE` until you claim at the Stripe dashboard / [projects.dev](https://projects.dev).
-
-## Submission
-
-See [docs/SUBMISSION.md](docs/SUBMISSION.md) — leaderboard code **`CreateOS-2026`**.
 
 ## License
 

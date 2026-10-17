@@ -1,32 +1,57 @@
-# Finish now (human-only leftovers)
+# Finish now (win the hackathon)
 
-## Already shipped (agent)
+## Already shipped
 
-| Item | Status | URL / proof |
-|------|--------|-------------|
+| Item | Status | Proof |
+|------|--------|-------|
 | Public GitHub | done | https://github.com/shahaman098/proofpay |
 | Release | done | https://github.com/shahaman098/proofpay/releases/tag/v0.1.0 |
 | Live demo | done | https://createos-stripe-agents.vercel.app |
-| Prod bounty API | done | `POST /api/bounty` → `requires_capture` |
-| LICENSE + README | done | MIT, live URLs in README |
+| Prod bounty path | done | BLOCKED → FAIL → PASS → capture |
+| Health + preflight | done | `GET /api/health` · `npm run preflight` |
+| Pitch | done | README + UI: sandbox = payment condition |
 
-## You must do (cannot automate)
+## Before you record / submit (2 min)
 
-1. **Stripe Projects claim** — open https://dashboard.stripe.com/login → Google (`amanshah0844@gmail.com`) → then https://projects.stripe.com/new → claim sandbox → in repo run:
-   ```bash
-   stripe login
-   stripe projects init --yes
-   stripe projects add createos
-   stripe projects share
-   ```
-   Leaderboard code: `CreateOS-2026`
+```bash
+cd /Users/efi/Hackathons/createos-stripe-agents
+npm run preflight
+npm run sync-createos-token && vercel --prod --yes
+curl -sS https://createos-stripe-agents.vercel.app/api/health   # must be createos: ok
+```
 
-2. **Demo video** — record UI fail→fix→capture (60–120s), upload YouTube/Loom; paste URL into `docs/SUBMISSION.md`.
+## You must do (blocks submission)
 
-3. **Social post** — X/LinkedIn with repo + live + video; tag CreateOS/Stripe.
+### 1. Stripe Projects (mandatory)
 
-4. **Discord form** — submit per hackathon Discord instructions with repo, live URL, video, Projects share link.
+CLI signed into `acct_1Tw3ZQGBTcMRYMsX` (Boto AI) but **has no live-mode access**. Projects needs live context.
 
-## Agent follow-up after you claim Projects
+1. Open https://projects.stripe.com/new (or https://projects.dev/hackathon-participants) while logged into a Stripe account that can claim the hackathon sandbox.
+2. Complete claim / eligibility.
+3. Then:
 
-Say “projects claimed” — agent will pull env, sync CreateOS token, redeploy, cancel orphan PIs, fill SUBMISSION placeholders.
+```bash
+export PATH="/opt/homebrew/Cellar/stripe/1.54.0/bin:$PATH"
+stripe switch context <your_acct> --live
+stripe projects init --yes
+stripe projects add createos
+stripe projects share
+```
+
+Leaderboard code: **`CreateOS-2026`** → https://projects.dev/leaderboard
+
+### 2. Demo video (2–3 min, on camera)
+
+Script in [SUBMISSION.md](./SUBMISSION.md). Beat list: pitch → hold → BLOCKED → FAIL → PASS → capture → quote differentiator → repo + code.
+
+### 3. Social
+
+Draft in SUBMISSION.md — post on X/LinkedIn tagging CreateOS.
+
+### 4. Discord form
+
+Submit live URL, repo, video, Projects share link, code `CreateOS-2026`.
+
+## After Projects claimed
+
+Say **projects claimed** — agent will pull env, re-verify share, fill remaining SUBMISSION checkboxes.
