@@ -31,6 +31,14 @@ export async function runProofPayBounty(options: RunOptions): Promise<boolean> {
     paymentIntentId,
     dashboardUrl: options.dashboardUrl,
   });
+  const agentMode = process.env.OPENROUTER_API_KEY?.trim()
+    ? "openrouter"
+    : "staged-fail-then-fix";
+  onEvent({
+    type: "log",
+    level: "info",
+    message: `Agent mode: ${agentMode}`,
+  });
   onEvent({ type: "log", level: "info", message: "Booting CreateOS sandbox (egress locked)…" });
 
   const client = createSandboxClient();

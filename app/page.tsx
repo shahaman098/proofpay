@@ -4,6 +4,16 @@ import { useCallback, useRef, useState } from "react";
 import type { RunEvent } from "@/lib/events";
 
 type LogLine = { level: string; message: string };
+type Step = "idle" | "bounty" | "sandbox" | "blocked" | "agent" | "pass" | "paid" | "failed";
+
+const STEPS: { id: Step; label: string }[] = [
+  { id: "bounty", label: "1. Hold bounty" },
+  { id: "sandbox", label: "2. Boot sandbox" },
+  { id: "blocked", label: "3. Block exfil" },
+  { id: "agent", label: "4. Agent write/fix" },
+  { id: "pass", label: "5. Tests pass" },
+  { id: "paid", label: "6. Capture pay" },
+];
 
 export default function Home() {
   const [logs, setLogs] = useState<LogLine[]>([]);
@@ -14,6 +24,7 @@ export default function Home() {
   const [receipt, setReceipt] = useState<string | null>(null);
   const [running, setRunning] = useState(false);
   const [done, setDone] = useState<boolean | null>(null);
+  const [step, setStep] = useState<Step>("idle");
   const logEnd = useRef<HTMLDivElement>(null);
 
   const pushLog = useCallback((level: string, message: string) => {
@@ -26,13 +37,19 @@ export default function Home() {
       switch (event.type) {
         case "log":
           pushLog(event.level, event.message);
+          if (event.level === "blocked") setStep("blocked");
+          if (event.level === "fail") setStep("agent");
+          if (event.level === "pass") setStep("pass");
           break;
         case "sandbox":
           setSandboxId(event.sandboxId);
+          setStep("sandbox");
           break;
         case "stripe":
           setStripeStatus(event.status);
           if (event.dashboardUrl) setDashboardUrl(event.dashboardUrl);
+          if (event.status === "requires_capture") setStep("bounty");
+          if (event.status === "succeeded") setStep("paid");
           break;
         case "receipt":
           setReceipt(event.token);
@@ -40,8 +57,10 @@ export default function Home() {
         case "done":
           setDone(event.success);
           setRunning(false);
+          if (!event.success) setStep("failed");
           break;
         case "attempt":
+          setStep("agent");
           pushLog("info", `—— Attempt ${event.n}/${event.max} ——`);
           break;
         default:
@@ -56,6 +75,7 @@ export default function Home() {
     setDone(null);
     setReceipt(null);
     setSandboxId(null);
+    setStep("bounty");
     setRunning(true);
     try {
       const res = await fetch("/api/bounty", { method: "POST" });
@@ -64,7 +84,10 @@ export default function Home() {
       setPaymentIntentId(data.paymentIntentId);
       setDashboardUrl(data.dashboardUrl);
       setStripeStatus(data.status);
-      pushLog("info", `Bounty authorised: ${data.paymentIntentId} ($${(data.amountCents / 100).toFixed(2)} held)`);
+      pushLog(
+        "info",
+        `Bounty authorised: ${data.paymentIntentId} ($${(data.amountCents / 100).toFixed(2)} held)`,
+      );
 
       const runRes = await fetch("/api/run", {
         method: "POST",
@@ -98,6 +121,7 @@ export default function Home() {
     } catch (err) {
       pushLog("error", err instanceof Error ? err.message : String(err));
       setRunning(false);
+      setStep("failed");
     }
   }
 
@@ -109,22 +133,40 @@ export default function Home() {
     return "text-gray-300";
   }
 
+  function stepState(id: Step) {
+    const order = STEPS.map((s) => s.id);
+    const cur = order.indexOf(step === "failed" ? "agent" : step);
+    const mine = order.indexOf(id);
+    if (step === "failed" && id === "paid") return "text-gray-600";
+    if (step === "paid" && mine <= order.indexOf("paid")) return "text-emerald-400";
+    if (mine < cur) return "text-emerald-400";
+    if (mine === cur) return "text-violet-300 font-semibold";
+    return "text-gray-600";
+  }
+
   return (
     <main className="mx-auto max-w-7xl p-6">
-      <header className="mb-8 border-b border-gray-800 pb-6">
-        <p className="text-sm text-violet-400">CreateOS × Stripe Projects</p>
+      <header className="mb-6 border-b border-gray-800 pb-6">
+        <p className="text-sm text-violet-400">CreateOS × Stripe Projects · CreateOS-2026</p>
         <h1 className="mt-1 text-3xl font-bold tracking-tight text-white">ProofPay</h1>
         <p className="mt-2 max-w-2xl text-gray-400">
-          Pay the agent only when the sandbox proves the code works — manual-capture bounty, locked egress,
-          OpenRouter codegen, CreateOS microVM execution.
+          Hold a Stripe bounty. Run the agent&apos;s code in a CreateOS microVM with egress locked. Capture
+          payment only when tests pass.
         </p>
+        <ol className="mt-4 flex flex-wrap gap-3 text-xs">
+          {STEPS.map((s) => (
+            <li key={s.id} className={stepState(s.id)}>
+              {s.label}
+            </li>
+          ))}
+        </ol>
       </header>
 
       <div className="grid gap-6 lg:grid-cols-2">
         <section className="rounded-xl border border-gray-800 bg-[var(--panel)] p-5">
           <h2 className="text-lg font-semibold text-white">Bounty & settlement</h2>
           <p className="mt-2 text-sm text-gray-400">
-            Task: implement Stripe webhook signature verification in an isolated sandbox.
+            Task: implement Stripe webhook signature verification inside an isolated sandbox.
           </p>
           <dl className="mt-4 space-y-2 text-sm">
             <div className="flex justify-between gap-4">
@@ -163,14 +205,23 @@ export default function Home() {
             {running ? "Agent running…" : "Post bounty & run agent"}
           </button>
           {done !== null && (
-            <p className={`mt-3 text-center text-sm font-medium ${done ? "text-emerald-400" : "text-red-400"}`}>
+            <p
+              className={`mt-3 text-center text-sm font-medium ${done ? "text-emerald-400" : "text-red-400"}`}
+            >
               {done ? "Bounty captured — proof verified." : "Bounty cancelled — tests did not pass."}
             </p>
           )}
+          <p className="mt-4 text-xs text-gray-500">
+            Repo:{" "}
+            <a className="text-violet-400 hover:underline" href="https://github.com/shahaman098/proofpay">
+              github.com/shahaman098/proofpay
+            </a>
+          </p>
         </section>
 
         <section className="flex flex-col rounded-xl border border-gray-800 bg-black/40 p-5">
           <h2 className="text-lg font-semibold text-white">Sandbox log</h2>
+          <p className="text-xs text-gray-500">Watch for BLOCKED → FAIL → PASS → capture</p>
           <pre
             className="mt-3 flex-1 overflow-y-auto rounded-lg bg-gray-950 p-4 font-mono text-xs leading-relaxed"
             style={{ maxHeight: "28rem" }}
@@ -178,6 +229,7 @@ export default function Home() {
             {logs.length === 0 && <span className="text-gray-600">Waiting for run…</span>}
             {logs.map((line, i) => (
               <div key={i} className={levelClass(line.level)}>
+                {line.level !== "info" ? `[${line.level.toUpperCase()}] ` : ""}
                 {line.message}
               </div>
             ))}

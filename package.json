@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "run-bounty": "esbuild scripts/run-bounty.ts --bundle --platform=node --format=esm --packages=external --outfile=scripts/.run-bounty.mjs && node scripts/.run-bounty.mjs"
+    "run-bounty": "esbuild scripts/run-bounty.ts --bundle --platform=node --format=esm --packages=external --outfile=scripts/.run-bounty.mjs && node scripts/.run-bounty.mjs",
+    "sync-createos-token": "bash scripts/sync-createos-token.sh"
   },
   "dependencies": {
     "@nodeops-createos/sandbox": "^0.8.2",
