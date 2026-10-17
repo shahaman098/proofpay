@@ -9,7 +9,9 @@ export const dynamic = "force-dynamic";
  * stripe: configured | missing
  */
 export async function GET() {
-  const hasStripe = Boolean(process.env.STRIPE_SECRET_KEY?.startsWith("sk_") || process.env.STRIPE_SECRET_KEY?.startsWith("rk_"));
+  const stripeKey = process.env.STRIPE_SECRET_KEY ?? "";
+  // sk_ / rk_ standard secrets; rkcs_ = Stripe restricted keys from Projects/sandboxes
+  const hasStripe = /^(sk_|rk_|rkcs_)/.test(stripeKey);
   const accessToken = process.env.CREATEOS_SANDBOX_ACCESS_TOKEN;
   const apiKey = process.env.CREATEOS_SANDBOX_API_KEY;
   const baseUrl = process.env.CREATEOS_SANDBOX_BASE_URL ?? "https://api.sb.createos.sh";
